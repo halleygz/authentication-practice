@@ -11,7 +11,8 @@
       <ul>
         <% if(user){%>
 
-        <li><a href="/allblogs">Blogs</a></li>
+        <li><a href="/myblogs">My Blogs</a></li>
+        <li><a href="/allblogs">All Blogs</a></li>
         <li><a href="/logout">Logout</a></li>
         <% } else { %>
         <li><a href="/login">Login</a></li>
@@ -20,7 +21,7 @@
       </ul>
     </nav>
     <% if (user) { %>
-      <h2>Welcome, <%= user.firstName %></h2>
+    <h2>Welcome, <%= user.firstName %></h2>
     <% } else { %> <% } %>
   </body>
 </html>

@@ -1,7 +1,8 @@
 const User = require("../models/User");
 const Blog = require("../models/Blog");
-const {Comment} = require("../models/Comment");
+const { Comment } = require("../models/Comment");
 const bcrypt = require("bcrypt");
+const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -69,7 +70,7 @@ module.exports.blog_post = async (req, res) => {
 };
 
 module.exports.comment_post = async (req, res) => {
-  const blogId = req.params.id
+  const blogId = req.params.id;
   const { content } = req.body;
   let userId = "";
   const token = req.cookies.jwt;
@@ -81,22 +82,26 @@ module.exports.comment_post = async (req, res) => {
       userId = decodedToken.id;
     }
   });
-  const user = await User.findById(userId)
+  const user = await User.findById(userId);
   try {
     const comments = await Comment.create({
       commenter: user.username,
       content,
     });
-    const updateBlog = await Blog.findByIdAndUpdate(blogId, {
-      $push:{commenters:{
-        commenter: user.username,
-        content,
-      }}
-    },
-    { new: true, runValidators: true}
-    )
-    console.log(comments, updateBlog)
-    res.status(201).json({ comments,updateBlog });
+    const updateBlog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $push: {
+          commenters: {
+            commenter: user.username,
+            content,
+          },
+        },
+      },
+      { new: true, runValidators: true }
+    );
+    console.log(comments, updateBlog);
+    res.status(201).json({ comments, updateBlog });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(401).json(errors);
@@ -137,5 +142,32 @@ module.exports.aBlog = async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-
+};
+module.exports.my_blogs = async (req, res) => {
+  try {
+    let userId = "";
+    const token = req.cookies.jwt;
+    promisify(jwt.verify)(token, secret, async (err, decodedToken) => {
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log(decodedToken);
+        userId = decodedToken.id;
+      }
+    });
+    const data = await Blog.aggregate([
+      {$sort: {authorId: 1}},
+      {$group: {
+        _id: "$authorId",
+        document:{$first: "$$ROOT"},
+      }},
+    ]);
+    console.log(data);
+    //res.locals.data = data;
+    res.render("myblogs", {
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
