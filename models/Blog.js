@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {Comment, CommentSchema} = require('./Comment')
 
 const BlogSchema = new mongoose.Schema({
     authorId: {
@@ -14,6 +15,8 @@ const BlogSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter a content"],
     },
+    commenters: [CommentSchema],
+
     createdAt: {
         type: Date,
         default: Date.now,
@@ -22,6 +25,7 @@ const BlogSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
       },
+
 })
 
 const Blog = mongoose.model("blog", BlogSchema);
