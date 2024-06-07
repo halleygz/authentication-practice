@@ -23,7 +23,7 @@ nav{
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 120px;
+  margin-bottom: 10px;
 }
 nav ul{
   display: flex;
@@ -89,6 +89,7 @@ button{
 header{
   display: flex;
   align-items: center;
+  margin-top: 20px;
 }
 header img{
   width: 250px;
@@ -112,25 +113,36 @@ header .btn{
   display: inline-block;
   font-size: 0.8em;
 }
-.recipes{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  column-gap: 30px;
-  row-gap: 80px;
-  margin: 80PX AUTO;
-  max-width: 1200px;
+main {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
-.recipe{
-  display: inline-block;
-  border-radius: 20px;
-  background: white;
-  position: relative;
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 300px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 0 20px 30px 20px
 }
-.recipe img{
-  width: 100px;
-  margin: -30px auto 20px;
+
+.card .image {
+  width: 100%;
+  height: 200px;
+  background-color: #ccc;
+}
+
+.card .text {
+  padding: 20px;
 }
 footer{
   text-align: center;
