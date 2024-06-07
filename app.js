@@ -1,8 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const cookieParser = require("cookie-parser");
 const { requireAuth, checkUser } = require("./middleware/authMiddleware");
+const dotenv = require('dotenv')
+dotenv.config()
 
 const app = express();
 
@@ -15,9 +18,7 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 
 // database connection
-const dbURI =
-  "mongodb+srv://halleuyamulugeta:zKIBvmUA8wyE2csD@cluster0.wtj15kf.mongodb.net/node-auth?retryWrites=true&w=majority&appName=Cluster0";
-
+const dbURI = process.env.MONGODB_URI
 // const connectMongo = async () => {
 //   try {
 //       await mongoose.connect(dbURI)
@@ -43,5 +44,5 @@ app.listen(3000, () => {
 // routes
 app.get('*', checkUser)
 app.get("/", (req, res) => res.render("home"));
-app.get("/smoothies", requireAuth, (req, res) => res.render("smoothies"));
 app.use(authRoutes);
+app.use(requireAuth,userRoutes)

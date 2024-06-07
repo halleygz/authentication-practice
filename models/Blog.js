@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
-const BlogSchema = new Schema({
+const BlogSchema = new mongoose.Schema({
     authorId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref:"User",
         required: true,
     },

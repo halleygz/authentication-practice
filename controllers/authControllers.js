@@ -1,7 +1,9 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const secret = "halleluya"
+const dotenv = require('dotenv')
+dotenv.config()
+const secret = process.env.JWT_SECRET
 //handle errors
 const handleErrors = (err) => {
   console.log(err.message, err.code);
