@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please enter a password "],
     minlength: [6, "Minimum password length is 6 characters"],
   },
+  avatar:{
+    type: String,
+    default: ""
+  }
 });
 
 userSchema.pre("save", async function (next) {
