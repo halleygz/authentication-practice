@@ -147,7 +147,7 @@ module.exports.my_blogs = async (req, res) => {
   try {
     let userId = "";
     const token = req.cookies.jwt;
-    promisify(jwt.verify)(token, secret, async (err, decodedToken) => {
+    jwt.verify(token, secret, async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
       } else {
@@ -156,13 +156,15 @@ module.exports.my_blogs = async (req, res) => {
       }
     });
     const data = await Blog.aggregate([
-      {$sort: {authorId: 1}},
-      {$group: {
-        _id: "$authorId",
-        document:{$first: "$$ROOT"},
-      }},
+      { $sort: { authorId: 1 } },
+      {
+        $group: {
+          _id: "$authorId",
+          document: { $first: "$$ROOT" },
+        },
+      },
     ]);
-    console.log(data);
+    // console.log(data);
     //res.locals.data = data;
     res.render("myblogs", {
       data,
@@ -171,3 +173,48 @@ module.exports.my_blogs = async (req, res) => {
     console.log(err);
   }
 };
+//edit post
+// edit post get
+module.exports.edit_blog = async (req, res) => {
+  try {
+    const locals = {
+      title: Blog.title,
+      description: Blog.content,
+    };
+    let userId = "";
+    const token = req.cookies.jwt;
+    jwt.verify(token, secret, async (err, decodedToken) => {
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log(decodedToken);
+        userId = decodedToken.id;
+      }
+    });
+    const paramId = req.params.id;
+    const data = await Blog.findById({ _id: paramId });
+    console.log(userId, data.authorId.toString())
+    if (userId === data.authorId.toString()) {
+      res.render("edit-post", { data });
+    } else {
+      console.log(`can't edit this post`);
+      res.redirect(`/blog/${paramId}`);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports.edit_blog_put = async(req, res)=>{
+  try {
+    const {title, content} = req.body
+    console.log(title,content)
+    await Blog.findByIdAndUpdate(req.param.id, {
+      title,
+      content,
+      unpdatedAt: Date.now()
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
